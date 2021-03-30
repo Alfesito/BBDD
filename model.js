@@ -1,4 +1,3 @@
-
 const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const options = { logging: false};

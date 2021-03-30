@@ -113,18 +113,14 @@ exports.play = async (rl) => {
       rl.log(`  Score: "${score}"`);
 
     // El usuario se registra para asignarle los puntos
-    let name =await rl.questionP('Whats your name?');
-   
-    if (!name) throw new Error("Response can't be empty!");
-    const user = await User.findOne({where: {name: name}});
-    if(!user){
-      user = User.create({name, age: 0});
+    rl.log(`Score: ${score}`);
+    let name = await rl.questionP('Escribe tu nombre de usuario');
+    let user = await User.findOne({where: {name:name}});
+    if (!user){
+      user = await User.create({name, age: 0})
     }
-    await Score.create( 
-      {wins: score,
-       userId : user.id
-      }
-    )
+
+    await Score.create({wins: score, userId:user.id});
   }
 
 
@@ -133,8 +129,12 @@ exports.score = async (rl) => {
   //let fixedDateFormat = date.toUTCString();
   let scores = await Score.findAll({
     include: {
-      model: User, as: 'user'
-    },order: [['wins','DESC']]
+      model: User, as:'user'
+    },
+    order: [['wins', 'DESC']]
   });
-  users.forEach( u => rl.log(`  ${u.name}|${u.userId.wins}|${u.createdAt.toUTCString()} `));
+
+for (s of scores) {
+  rl.log(`${s.user.name}|${s.wins}|${s.createdAt.toUTCString()}`);
+}
 }
