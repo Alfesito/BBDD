@@ -1,4 +1,3 @@
-
 const {User, Quiz, Score} = require("./model.js").models;
 const {Sequelize} = require("sequelize");
 // Show all quizzes in DB including <id> and <author>
@@ -83,9 +82,9 @@ exports.delete = async (rl) => {
 }
 
 
-let score = 0;
 //Play
 exports.play = async (rl) => {
+  let score = 0;
   let res = [];
   let totQuizzes = await Quiz.count();
   
@@ -115,9 +114,12 @@ exports.play = async (rl) => {
 
     // El usuario se registra para asignarle los puntos
     let name =await rl.questionP('Whats your name?');
-    let age = 0;
+   
     if (!name) throw new Error("Response can't be empty!");
-    const {user} = await User.findOrCreate({where: {name, age}});
+    const user = await User.findOne({where: {name: name}});
+    if(!user){
+      user = User.create({name, age: 0});
+    }
     await Score.create( 
       {wins: score,
        userId : user.id
@@ -127,9 +129,12 @@ exports.play = async (rl) => {
 
 
 exports.score = async (rl) => {
-  let date = new Date(Date.now()); 
-  let fixedDateFormat = date.toUTCString();
-  let users = await User.findAll();
-  users.forEach( u => rl.log(`  ${u.name}|${u.userId.score}|${fixedDateFormat} `));
+  //let date = new Date(Date.now()); 
+  //let fixedDateFormat = date.toUTCString();
+  let scores = await Score.findAll({
+    include: {
+      model: User, as: 'user'
+    },order: [['wins','DESC']]
+  });
+  users.forEach( u => rl.log(`  ${u.name}|${u.userId.wins}|${u.createdAt.toUTCString()} `));
 }
-

@@ -1,4 +1,3 @@
-
 const {User, Quiz} = require("./model.js").models;
 
 exports.help = (rl) => 
@@ -9,14 +8,14 @@ exports.help = (rl) =>
     > lu | ul | u    ## users: list all
     > cu | uc        ## user: create
     > ru | ur | r    ## user: read (show age)
-    > uu             ## user: update
+    > uu             ## user: update
     > du | ud        ## user: delete
     > ls             ## user: score
     >
     > lq | ql | q    ## quizzes: list all
     > cq | qc        ## quiz: create
     > tq | qt | t    ## quiz: test (play)
-    > uq | qu        ## quiz: update
+    > uq | qu        ## quiz: update
     > dq | qd        ## quiz: delete
     > p              ## quizzes: play
     >
@@ -114,4 +113,3 @@ exports.delete = async (rl) => {
 
   rl.log(`  ${name} deleted from DB`);  
 }
-
